@@ -1,6 +1,21 @@
 version: "3"
 
 services:
+  proxy:
+    image: traefik:2.5
+    command:
+      - --providers.docker
+      - --providers.docker.exposedbydefault=false
+      - --entrypoints.web.address=:80
+    ports:
+      - 80:80
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+    userns_mode: host
+    networks:
+      - erp-network
+      - traefik-public
+
   backend:
     image: frappe/erpnext:v15.10.7
     deploy:
@@ -127,6 +142,14 @@ services:
     networks:
       - mariadb-network
       - erp-network
+      - traefik-public
+    labels:
+      - traefik.enable=true
+      - traefik.docker.network=traefik-public
+      - traefik.http.services.erp.loadbalancer.server.port=8080
+      - traefik.http.routers.erp-http.service=${ROUTER}
+      - traefik.http.routers.erp-http.entrypoints=http
+      - traefik.http.routers.erp-http.rule=Host(`frontend`)
 
   queue-long:
     image: frappe/erpnext:v15.10.7
@@ -227,4 +250,7 @@ networks:
     external: false
   erp-network:
     name: erp-network
+    external: false
+  traefik-public:
+    name: traefik-public
     external: false
