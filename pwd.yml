@@ -40,6 +40,9 @@ services:
 
   create-site:
     image: frappe/erpnext:v15.10.7
+    depends_on:
+      db:
+        condition: service_healthy
     deploy:
       restart_policy:
         condition: none
