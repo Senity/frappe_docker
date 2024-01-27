@@ -4,14 +4,22 @@ services:
   proxy:
     image: traefik:2.5
     command:
-      - --providers.docker
+      # Enable Docker in Traefik, so that it reads labels from Docker services
+      - --providers.docker=true
+      # Do not expose all Docker services, only the ones explicitly exposed
       - --providers.docker.exposedbydefault=false
-      - --entrypoints.web.address=:80
+      # Create an entrypoint http listening on port 80
+      - --entrypoints.http.address=:80
+      # Enable the access log, with HTTP requests
+      - --accesslog
+      # Enable the Traefik log, for configurations and errors
+      - --log
+      # Enable the Dashboard and API
+      - --api
     ports:
       - 80:80
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock:ro
-    userns_mode: host
     networks:
       - erp-network
       - traefik-public
