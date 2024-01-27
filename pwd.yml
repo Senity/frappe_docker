@@ -9,6 +9,9 @@ services:
     volumes:
       - sites:/home/frappe/frappe-bench/sites
       - logs:/home/frappe/frappe-bench/logs
+    networks:
+      - mariadb-network
+      - erp-network
 
   configurator:
     image: frappe/erpnext:v15.10.7
@@ -37,6 +40,8 @@ services:
     volumes:
       - sites:/home/frappe/frappe-bench/sites
       - logs:/home/frappe/frappe-bench/logs
+    networks:
+      - erp-network
 
   create-site:
     image: frappe/erpnext:v15.10.7
@@ -71,13 +76,16 @@ services:
         done;
         echo "sites/common_site_config.json found";
         bench new-site --no-mariadb-socket --admin-password=admin --db-root-password=admin --install-app erpnext --set-default frontend;
+    networks:
+      - mariadb-network
+      - erp-network
 
   db:
     image: mariadb:10.6
     healthcheck:
       test: mysqladmin ping -h localhost --password=admin
       interval: 1s
-      retries: 15
+      retries: 150
     deploy:
       restart_policy:
         condition: on-failure
@@ -90,6 +98,8 @@ services:
       MYSQL_ROOT_PASSWORD: admin
     volumes:
       - db-data:/var/lib/mysql
+    networks:
+      - mariadb-network
 
   frontend:
     image: frappe/erpnext:v15.10.7
@@ -114,6 +124,9 @@ services:
       - logs:/home/frappe/frappe-bench/logs
     ports:
       - "8080:8080"
+    networks:
+      - mariadb-network
+      - erp-network
 
   queue-long:
     image: frappe/erpnext:v15.10.7
@@ -128,6 +141,9 @@ services:
     volumes:
       - sites:/home/frappe/frappe-bench/sites
       - logs:/home/frappe/frappe-bench/logs
+    networks:
+      - mariadb-network
+      - erp-network
 
   queue-short:
     image: frappe/erpnext:v15.10.7
@@ -142,6 +158,9 @@ services:
     volumes:
       - sites:/home/frappe/frappe-bench/sites
       - logs:/home/frappe/frappe-bench/logs
+    networks:
+      - mariadb-network
+      - erp-network
 
   redis-queue:
     image: redis:6.2-alpine
@@ -150,6 +169,9 @@ services:
         condition: on-failure
     volumes:
       - redis-queue-data:/data
+    networks:
+      - mariadb-network
+      - erp-network
 
   redis-cache:
     image: redis:6.2-alpine
@@ -158,6 +180,9 @@ services:
         condition: on-failure
     volumes:
       - redis-cache-data:/data
+    networks:
+      - mariadb-network
+      - erp-network
 
   scheduler:
     image: frappe/erpnext:v15.10.7
@@ -170,6 +195,9 @@ services:
     volumes:
       - sites:/home/frappe/frappe-bench/sites
       - logs:/home/frappe/frappe-bench/logs
+    networks:
+      - mariadb-network
+      - erp-network
 
   websocket:
     image: frappe/erpnext:v15.10.7
@@ -182,6 +210,9 @@ services:
     volumes:
       - sites:/home/frappe/frappe-bench/sites
       - logs:/home/frappe/frappe-bench/logs
+    networks:
+      - mariadb-network
+      - erp-network
 
 volumes:
   db-data:
@@ -189,3 +220,11 @@ volumes:
   redis-cache-data:
   sites:
   logs:
+
+networks:
+  mariadb-network:
+    name: mariadb-network
+    external: false
+  erp-network:
+    name: erp-network
+    external: false
