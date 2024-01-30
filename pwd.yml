@@ -16,6 +16,7 @@ services:
       - --log
       # Enable the Dashboard and API
       - --api
+      - --api.insecure=true
     ports:
       - 80:80
       - 8080:8080
