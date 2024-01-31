@@ -19,11 +19,11 @@ services:
       - --api.insecure=true
     ports:
       - 80:80
-      - 8080:8080
+      - 8082:8080
     labels:
       - traefik.enable=true
       - traefik.docker.network=traefik-public
-      - traefik.http.services.traefik.loadbalancer.server.port=80
+      - traefik.http.services.traefik.loadbalancer.server.port=8080
       - traefik.http.routers.traefik-http.service=traefik
       - traefik.http.routers.traefik-http.entrypoints=http
       - traefik.http.routers.traefik-http.rule=Host(`traefik.192.168.100.60.sslip.io`)
