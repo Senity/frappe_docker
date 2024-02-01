@@ -297,14 +297,21 @@ volumes:
     driver: local,
     driver_opts: {
       type: none,
-      device: ./db-data,
+      device: /var/lib/mysql,
       o: bind
     }
   }
   redis-queue-data:
   redis-cache-data:
   sites:
-  logs:
+  logs: {
+    driver: local,
+    driver_opts: {
+      type: none,
+      device: /var/log/erpnext,
+      o: bind
+    }
+  }
 
 networks:
   mariadb-network:
