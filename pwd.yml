@@ -255,7 +255,14 @@ services:
       - erp-network
 
 volumes:
-  db-data:
+  db-data: {
+    driver: local,
+    driver_opts: {
+      type: none,
+      device: /home/erpnext/erpnext-docker/mariadb/db-data,
+      o: bind
+    }
+  }
   redis-queue-data:
   redis-cache-data:
   sites:
