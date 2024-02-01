@@ -144,7 +144,7 @@ services:
       - nginx-entrypoint.sh
     environment:
       BACKEND: backend:8000
-      FRAPPE_SITE_NAME_HEADER: frontend
+      FRAPPE_SITE_NAME_HEADER: erp
       SOCKETIO: websocket:9000
       UPSTREAM_REAL_IP_ADDRESS: 127.0.0.1
       UPSTREAM_REAL_IP_HEADER: X-Forwarded-For
@@ -166,7 +166,7 @@ services:
       - traefik.http.services.erp.loadbalancer.server.port=8080
       - traefik.http.routers.erp-http.service=erp
       - traefik.http.routers.erp-http.entrypoints=http
-      - traefik.http.routers.erp-http.rule=Host(`frontend.192.168.100.60.sslip.io`)
+      - traefik.http.routers.erp-http.rule=Host(`erp.192.168.100.60.sslip.io`)
 
   queue-long:
     image: frappe/erpnext:v15.10.7
@@ -259,7 +259,7 @@ volumes:
     driver: local,
     driver_opts: {
       type: none,
-      device: /home/erpnext/erpnext-docker/mariadb/db-data,
+      device: ./docker/mariadb/db-data,
       o: bind
     }
   }
