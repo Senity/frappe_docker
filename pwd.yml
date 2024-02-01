@@ -111,7 +111,7 @@ services:
         bench get-app webshop https://github.com/frappe/webshop
         echo "Getting app payments";
         bench get-app payments https://github.com/frappe/payments
-        bench new-site --no-mariadb-socket --admin-password=admin --db-root-password=admin --install-app erpnext --install-app webshop --install-app payments --set-default erp;
+        bench new-site --no-mariadb-socket --admin-password=admin --db-root-password=admin --db-name=erp-senity --install-app erpnext --install-app webshop --install-app payments --set-default erp;
     networks:
       - mariadb-network
       - erp-network
@@ -153,7 +153,7 @@ services:
         echo "Getting app payments";
         bench get-app payments https://github.com/frappe/payments
         echo "Creating site morsy";
-        bench new-site --no-mariadb-socket --admin-password=admin --db-root-password=admin --install-app erpnext --install-app non_profit --install-app payments --set-default morsy;
+        bench new-site --no-mariadb-socket --admin-password=admin --db-root-password=admin --db-name=morsy --install-app erpnext --install-app non_profit --install-app payments --set-default morsy;
     networks:
       - mariadb-network
       - erp-network
